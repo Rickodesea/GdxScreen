@@ -1,23 +1,23 @@
 package com.algodal.gdxscreen;
 
-import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Screen;
 
-public class GdxScreenRenderer implements ApplicationListener {
+public class GdxScreen implements Screen{
 
 	@Override
-	public void create() {
+	public void show() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void render(float delta) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void render() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -35,8 +35,15 @@ public class GdxScreenRenderer implements ApplicationListener {
 	}
 
 	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
 		
 	}
+
 }
