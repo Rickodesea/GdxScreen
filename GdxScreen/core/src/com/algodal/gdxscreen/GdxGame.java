@@ -30,6 +30,7 @@ public class GdxGame extends Game{
 	
 	@Override
 	public void create() {
+		initialize(); //user defined method
 		debug.assertGreaterEqualInt("registered atleast one screen", screenMap.size, 1);
 		debug.assertGreaterEqualInt("registered atleast one transition", transitionMap.size, 1);
 		setScreen(new GdxScreen()); //default screen - null is not allowed
@@ -107,7 +108,7 @@ public class GdxGame extends Game{
 		debug.assertStringNotEmpty("screen ref is not empty", screenRef);
 		debug.assertStringNotEmpty("asset ref is not empty", assetRef);
 		debug.assertTrue("screen ref exists", screenMap.containsKey(screenRef));
-		debug.assertTrue("asset ref exists", screenMap.containsKey(assetRef));
+		debug.assertTrue("asset ref exists", assetMap.containsKey(assetRef));
 		
 		//get objects
 		GdxScreen screen = screenMap.get(screenRef);
@@ -189,6 +190,7 @@ public class GdxGame extends Game{
 		for(Entry<String, GdxScreen> entry : screenMap) entry.value.dispose();
 		for(Entry<String, GdxTransition> entry : transitionMap) entry.value.dispose();
 		assetManager.dispose();
+		deinitialize(); //user defined
 	}
 
 	@Override
