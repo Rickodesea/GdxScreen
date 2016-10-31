@@ -47,6 +47,11 @@ public class GdxLibrary {
 		for(Entry<String, Content<?>> entry : contentMap) if(!entry.value.independent) entry.value.unload();
 	}
 	
+	/**
+	 * Get the content stored in the library.
+	 * @param ref Your unique defined reference string
+	 * @return the content you requested.
+	 */
 	@SuppressWarnings("unchecked")
 	public final <T> Content<T> getContent(String ref){
 		debug.assertNotNull("content ref is not null", ref);
@@ -54,6 +59,11 @@ public class GdxLibrary {
 		debug.assertTrue("content ref exists", contentMap.containsKey(ref));
 		
 		return (Content<T>) contentMap.get(ref);
+	}
+	
+	//for convenience
+	public final <T> Content<T> getContent(String ref, Class<T> clazz){
+		return getContent(ref);
 	}
 	
 	public final <T> void setContent(String ref, Content<T> content){

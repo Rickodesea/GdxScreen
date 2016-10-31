@@ -15,8 +15,8 @@ import com.badlogic.gdx.utils.XmlWriter;
  * format.  The object must be POJO: no extension and only java.lang types.  It might work if
  * you break the POJO rules, which is OK, but be careful, in some instances the JSON generator
  * might run of memory when processing your object.
- * The fields of the objects may be of java.lang types and POJO class types.  Any thing else
- * may cause memory issues.
+ * The fields of the objects may be private of java.lang types and POJO class types.  Any thing else
+ * may cause memory issues.  There must be getters (and setters).
  *
  */
 public class GdxSave {
@@ -54,7 +54,7 @@ public class GdxSave {
 	 * Saves all objects in the list to the file you specify.  The file is overwritten or created.
 	 * The save format possess additional information such as time of save and number of objects.
 	 */
-	public void save(){
+	public String save(){
 		StringWriter stringWriter = new StringWriter();
 		XmlWriter xmlWriter = new XmlWriter(stringWriter);
 		Json json = new Json();
@@ -62,12 +62,12 @@ public class GdxSave {
 		debug.assertNoException("No exception during save", new Operation<Void>() {
 			@Override
 			public Void resultOf() throws Exception {
-				xmlWriter.element(ROOT_NAME).attribute(ROOT_NAME, dataName)
+				xmlWriter.element(ROOT_ELEMENT).attribute(ROOT_NAME, dataName)
 				.attribute(ROOT_TIME, flashTime()).attribute(ROOT_COUNT, Integer.toString(plainOldJavaObjects.size));
 				for(int i = 0; i < plainOldJavaObjects.size; i++){
 					debug.assertContructorEmpty("object has null constructor class", plainOldJavaObjects.get(i).getClass());
 					xmlWriter.element(CHILD_ELEMENT).attribute(CHILD_ID, Integer.toString(i));
-					xmlWriter.text(json.toJson(plainOldJavaObjects.get(i)));
+					xmlWriter.text(json.toJson(plainOldJavaObjects.get(i), Object.class));
 					xmlWriter.pop();
 				}
 				xmlWriter.pop();
@@ -76,7 +76,9 @@ public class GdxSave {
 			}
 		});
 		
-		handle.writeString(stringWriter.toString(), false);
+		String xmlJsonString = stringWriter.toString();
+		handle.writeString(xmlJsonString, false);
+		return xmlJsonString;
 	}
 	
 	private String flashTime(){

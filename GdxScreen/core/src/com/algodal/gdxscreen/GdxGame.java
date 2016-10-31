@@ -302,8 +302,9 @@ public class GdxGame extends Game{
 	@Override
 	public void dispose() {
 		currentState = State.Disposing;
-		for(Entry<String, GdxScreen> entry : screenMap) entry.value.dispose();
-		for(Entry<String, GdxScreen> entry : transitionMap) entry.value.dispose();
+		//Only screens that were initially created may be disposed.
+		for(Entry<String, GdxScreen> entry : screenMap) if(entry.value.created) entry.value.dispose();
+		for(Entry<String, GdxScreen> entry : transitionMap) if(entry.value.created) entry.value.dispose();
 		assetManager.dispose();
 		currentState = State.Deinitializing;
 		deinitialize(); //user defined

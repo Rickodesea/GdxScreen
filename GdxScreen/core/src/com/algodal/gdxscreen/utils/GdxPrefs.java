@@ -10,13 +10,18 @@ import com.badlogic.gdx.utils.reflect.Field;
  * GdxPrefs stores Preferences for a Java object and loads it back into the object.
  * The object must be POJO: no extension and only java.lang types.  The fields can only be
  * of java.lang types.  Anything else probably will have no effect.
+ * 
+ * As of now, this is very limited.  Unless the fields are public, the GdxPrefs
+ * will not see it.  This is something that needs to improve on.  It also seems to
+ * not to save all the fields.
  *
  * @param <PojoType> A type the mostly satisfies the POJO rule.
  */
 public class GdxPrefs<PojoType> {
 	private final Class<PojoType> clazz;
-	private final PojoType object;
 	private final Preferences prefs;
+	
+	public final PojoType object;
 	public final GdxDebug debug;
 	
 	public GdxPrefs(String prefsName, Class<PojoType> clazz){
@@ -41,6 +46,7 @@ public class GdxPrefs<PojoType> {
 	}
 	
 	private void put(Field field){
+		field.setAccessible(true); //allow private access, important unless the POJO has only public fields
 		if(field.getType().equals(Integer.class) || field.getType().equals(Short.class))
 			prefs.putInteger(field.getName(), debug.assertNoException("get integer", getValue(field, Integer.class)));
 		else if(field.getType().equals(Long.class))
@@ -88,6 +94,7 @@ public class GdxPrefs<PojoType> {
 	}
 	
 	private void take(Field field){
+		field.setAccessible(true); //allow private access, important unless the POJO has only public fields
 		if(field.getType().equals(Integer.class) || field.getType().equals(Short.class))
 			setValue(field, prefs.getInteger(field.getName(), 0));
 		else if(field.getType().equals(Long.class))

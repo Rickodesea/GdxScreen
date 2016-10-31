@@ -32,6 +32,7 @@ public class GdxLoad {
 				data.setTime(element.getAttribute(GdxSave.ROOT_TIME));
 				data.setCount(Integer.parseInt(element.getAttribute(GdxSave.ROOT_COUNT)));
 				data.setPlainOldJavaObjects(new Array<Object>());
+				data.setRepresentation(element.toString());
 				debug.assertEqual("root element is " + GdxSave.ROOT_ELEMENT, element.getName(), GdxSave.ROOT_ELEMENT);
 				for(int i = 0; i < element.getChildCount(); i ++){
 					Element child = element.getChild(i);
@@ -49,6 +50,7 @@ public class GdxLoad {
 		private String time;
 		private String name;
 		private int count;
+		private String representation;
 		
 		/**
 		 * List of java objects that was saved.  Their field values are specific to what
@@ -97,6 +99,17 @@ public class GdxLoad {
 		
 		final void setCount(int count) {
 			this.count = count;
+		}
+
+		/**
+		 * @return the string representation of the data.
+		 */
+		public String getRepresentation() {
+			return representation;
+		}
+
+		final void setRepresentation(String representation) {
+			this.representation = representation;
 		}
 	}
 }
