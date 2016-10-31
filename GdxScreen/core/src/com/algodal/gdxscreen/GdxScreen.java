@@ -1,24 +1,41 @@
 package com.algodal.gdxscreen;
 
+import com.algodal.gdxscreen.utils.GdxLibrary;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * GdxScreen implements libGdx's Screen.  Additionally, it provides
+ * a create method to create initializations that will last until the 
+ * game life-span ends; getAsset to get any asset associated
+ * with the screen at initialization and launch to call another screen to be active.  
+ * Unlike. libGdx's Screens, GdxScreens
+ * are automatically disposed when the game disposes, so do not dispose them
+ * yourself.  You are free to override any Screen method and create().
+ */
 public class GdxScreen implements Screen{
 
 	final Array<String> assetRefs;
 	private GdxGame game;
 	boolean created;
 	boolean showed;
+	boolean loaded;
 	
 	public GdxScreen(){
 		assetRefs = new Array<>();
 	}
 	
-	void setGame(GdxGame game){
+	/**
+	 * Set during registration.
+	 * @param game the game that register it.
+	 * @return the screen for convenience.
+	 */
+	final GdxScreen setGame(GdxGame game){
 		this.game = game;
+		return this;
 	}
 	
-	GdxGame getGame(){
+	final GdxGame getGame(){
 		return game;
 	}
 	
@@ -70,23 +87,12 @@ public class GdxScreen implements Screen{
 		return getClass().equals(screen.getClass());
 	}
 	
-	void loadAssets(){
+	final void loadAssets(){
 		for(String assetRef : assetRefs)
 			game.assetMap.get(assetRef).load();
 	}
 	
-	void unloadAssets(){
-		for(String assetRef : assetRefs)
-			game.assetMap.get(assetRef).unload();
-	}
-	
-	void unloadDifferentAssets(Array<String> otherAssetRefs){
-		for(String assetRef : assetRefs)
-			if(!otherAssetRefs.contains(assetRef, false))
-				game.assetMap.get(assetRef).unload();
-	}
-	
-	float assetProgress(){
+	final float assetProgress(){
 		int totalAssets = assetRefs.size + 1;
 		int readyAssets = 1;
 		for(String assetRef : assetRefs)
@@ -95,15 +101,38 @@ public class GdxScreen implements Screen{
 		return (float)readyAssets / (float)totalAssets;
 	}
 	
+	/**
+	 * This method is called absolutely once.  Any variable you initialize here will remain
+	 * initialized until the game ends.
+	 */
 	public void create(){}
 	
-	public void launch(String transitionRef, String screenRef){
+	/**
+	 * Set a new screen as the active / current screen.
+	 * @param transitionRef Reference to the transition to deliver the new screen
+	 * @param screenRef Reference to the new screen
+	 */
+	final public void launch(String transitionRef, String screenRef){
 		getGame().debug.assertEqual("method called in rendering", getGame().currentState, GdxGame.State.Rendering);
 		game.launch(transitionRef, screenRef);
 	}
 	
-	public <T> T getAsset(String assetRef){
-		game.debug.assertTrue("asset ref exists", assetRefs.contains(assetRef, false));
+	/**
+	 * Get an asset this screen has access to,
+	 * @param assetRef Reference to the asset that belongs to this screen
+	 * @return An asset.
+	 */
+	final public <T> T getAsset(String assetRef){
+		game.debug.assertTrue("asset ref exists for this screen", assetRefs.contains(assetRef = assetRef.trim(), false));
 		return game.assetManager.get(game.assetMap.get(assetRef).getDescriptor().fileName);
+	}
+	
+	//for convenience
+	final public <T> T getAsset(String assetRef, Class<T> clazz){
+		return getAsset(assetRef);
+	}
+	
+	final public GdxLibrary getGameLibrary(){
+		return game.library;
 	}
 }

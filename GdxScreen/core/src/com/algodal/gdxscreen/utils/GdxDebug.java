@@ -5,20 +5,33 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Constructor;
 
+/**
+ * A utility class for handling debugging code.  Using it will simplify
+ * your algorithm - without it you will write a lot of nested if statements
+ * which is unmanageable, hard to read and buggy.  Also, the library, GdxScreen, has
+ * it embedded it its code.  However, its functions can be deactivated by calling
+ * setOn(false).
+ */
 public class GdxDebug {
 	private boolean on;
-	private boolean iterate, iterating;
+	
+	public GdxDebug setOn(boolean on){
+		this.on = on;
+		return this;
+	}
+	
+	public boolean isOn(){
+		return on;
+	}
 	
 	private boolean debug(){
-		return
-				on &&
-				(iterating == true) ? iterate : true;
+		return on;
 	}
 	
 	public void assertTrue(String tag, boolean condition){
-		if(debug())
+		if(debug()){
 			if(!condition)
-				throw new GdxRuntimeException("failed: " + tag);
+				throw new GdxRuntimeException("failed: " + tag);}
 	}
 	
 	public void assertFalse(String tag, boolean condition){
