@@ -6,18 +6,21 @@ import com.algodal.gdxscreen.utils.GdxDebug.Operation;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.XmlWriter;
 
 /**
  * This is for saving a list of objects of any class types, as long the
  * classes mostly satisfies POJO rules, as JSON strings nested inside a XML
- * format.  The object must be POJO: no extension and only java.lang types.  It might work if
- * you break the POJO rules, which is OK, but be careful, in some instances the JSON generator
+ * format.  The object should be POJO: no extension, only java.lang types and definitely
+ * an empty constructor.  It might work if
+ * you break the POJO some rules(not the constructor one), which is OK, but be careful, 
+ * in some instances the JSON generator
  * might run of memory when processing your object.
- * The fields of the objects may be private of java.lang types and POJO class types.  Any thing else
- * may cause memory issues.  There must be getters (and setters).
- *
+ * The fields of the objects may be of java.lang types and POJO class types.  
+ * Any thing else
+ * may cause memory issues.  For private fields, there may have to be getters (and setters)
+ * for the json processor to read or write their values.
+ * 
  */
 public class GdxSave {
 	private final FileHandle handle;
@@ -82,20 +85,6 @@ public class GdxSave {
 	}
 	
 	private String flashTime(){
-		long time = TimeUtils.nanoTime();
-		long seconds = time / (long)1E9;
-		long minutes = seconds / 60;
-		long hours = minutes / 60;
-		
-		class TenLead{
-			public String leadedValue(long number){
-				if(number < 10) return "0" + number;
-				else return Long.toString(number);
-			}
-		}
-		
-		TenLead tln = new TenLead();
-		
-		return hours + ":" + tln.leadedValue(minutes) + ":" + tln.leadedValue(seconds);
+		return new java.util.Date().toString();
 	}
 }
