@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2016 Alrick Grandison (Algodal)  alrickgrandison@gmail.com
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.algodal.gdxscreen.utils;
 
 import com.badlogic.gdx.utils.ArrayMap;
@@ -50,6 +65,7 @@ public class GdxLibrary {
 	/**
 	 * Get the content stored in the library.
 	 * @param ref Your unique defined reference string
+	 * @param <T> type of content - Any object.
 	 * @return the content you requested.
 	 */
 	@SuppressWarnings("unchecked")
@@ -83,7 +99,7 @@ public class GdxLibrary {
 	 * The content allows you to initialize, load, unload and get the objects any time
 	 * you want.
 	 *
-	 * @param <T> Any object.
+	 * @param <T> type of content - Any object.
 	 */
 	public static abstract class Content <T> implements Disposable{
 		/**
@@ -107,6 +123,7 @@ public class GdxLibrary {
 
 		/**
 		 * Initialize the content.
+		 * @return this content
 		 */
 		abstract public Content<T> initialize();
 		
@@ -125,6 +142,7 @@ public class GdxLibrary {
 		 * Tells the library container not to process it when
 		 * it is processing contents in batch. 
 		 * @param independent the independent to set
+		 * @return this content
 		 */
 		public final Content<T> setIndependent(boolean independent) {
 			this.independent = independent;
@@ -157,6 +175,7 @@ public class GdxLibrary {
 		
 		/**
 		 * Loads the content, i.e. make it usable.
+		 * @return this content.
 		 */
 		abstract public Content<T> load();
 		

@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2016 Alrick Grandison (Algodal)  alrickgrandison@gmail.com
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.algodal.gdxscreen;
 
 import com.algodal.gdxscreen.utils.GdxDebug;
@@ -84,28 +99,6 @@ public class GdxGame extends Game{
 	 * @param screenClass Any class that extends GdxScreen
 	 */
 	public final void registerScreen(String ref, Class<? extends GdxScreen> screenClass){
-		/*debug.assertEqual("method is called in initialize", currentState, State.Initializing);
-		debug.assertNotNull("screen ref is not null", ref);
-		debug.assertNotNull("screen class is not null", screenClass);
-		debug.assertStringNotEmpty("screen ref is not empty", (ref = ref.trim())); //The trimmed down version of the string is used
-		debug.assertContructorEmpty("screen class has a empty constructor", screenClass);
-		
-		//generate screen object
-		GdxScreen screen = debug.assertNoException("no screen allocation excepton", new Operation<GdxScreen>() {
-			@Override
-			public GdxScreen resultOf() throws Exception {
-				return screenClass.newInstance();
-			}
-		});
-		screen.setGame(this); //This is a must.  Every screen must know their game.
-		
-		debug.assertNotNull("screen is not null", screen);
-		debug.assertTrue("screen class extends GdxScreen",screen instanceof GdxScreen);
-		debug.assertFalse("screen ref is unique", screenMap.containsKey(ref)); //unique reference
-		debug.assertFalse("screen object is unique", screenMap.containsValue(screen, false)); //unique screen: see GdxScreen equals(ObjectS) method
-		
-		//add new reference
-		screenMap.put(ref, screen); */
 		registerScreen(screenMap, "GdxScreen", ref, screenClass);
 	}
 	
@@ -116,28 +109,6 @@ public class GdxGame extends Game{
 	 * @param transitionClass Any class that extends GdxTransition
 	 */
 	public final void registerTransition(String ref, Class<? extends GdxTransition> transitionClass){
-		/*debug.assertEqual("method is called in initialize", currentState, State.Initializing);
-		debug.assertNotNull("transition ref is not null", ref);
-		debug.assertNotNull("transition class is not null", transitionClass);
-		debug.assertStringNotEmpty("transition ref is not empty",  (ref = ref.trim())); //trimmed used
-		debug.assertContructorEmpty("transition class has empty constructor", transitionClass);
-		
-		//generate transition object
-		GdxTransition transition = debug.assertNoException("transition allocation has no exception", new Operation<GdxTransition>() {
-			@Override
-			public GdxTransition resultOf() throws Exception {
-				return transitionClass.newInstance();
-			}
-		});
-		transition.setGame(this); //A must
-		
-		debug.assertNotNull("transition is not null", transition);
-		debug.assertTrue("transition class extends GdxTransition", transition instanceof GdxTransition);
-		debug.assertFalse("transition ref is unique", transitionMap.containsKey(ref));
-		debug.assertFalse("transition object is unique", transitionMap.containsValue(transition, false)); //see GdxTransition equals(ObjectS) method
-		
-		//add reference
-		transitionMap.put(ref, transition);*/
 		Class<? extends GdxScreen> clazz = (Class<? extends GdxScreen>)transitionClass;
 		registerScreen(transitionMap, "GdxTransition", ref, clazz );
 	}
@@ -147,6 +118,7 @@ public class GdxGame extends Game{
 	 * the initialize method.
 	 * @param ref A unique string reference created by you.
 	 * @param descriptor A libGdx asset descriptor
+	 * @param <T> Type of asset
 	 */
 	public final <T> void registerAsset(String ref, AssetDescriptor<T> descriptor){
 		debug.assertEqual("method is called in initialize", currentState, State.Initializing);
@@ -174,21 +146,6 @@ public class GdxGame extends Game{
 	 * @param assetRef The reference you created for the asset.
 	 */
 	public final void attachAssetToScreen(String screenRef, String assetRef){
-		/*debug.assertEqual("method is called in initialize", currentState, State.Initializing);
-		debug.assertNotNull("screen ref is not null", screenRef);
-		debug.assertNotNull("asset ref is not null", assetRef);
-		debug.assertStringNotEmpty("screen ref is not empty", (screenRef = screenRef.trim()));
-		debug.assertStringNotEmpty("asset ref is not empty", (assetRef = assetRef.trim()));
-		debug.assertTrue("screen ref exists", screenMap.containsKey(screenRef));
-		debug.assertTrue("asset ref exists", assetMap.containsKey(assetRef));
-		
-		//get objects
-		GdxScreen screen = screenMap.get(screenRef);
-		
-		debug.assertFalse("screen ref gets new asset ref", screen.assetRefs.contains(assetRef, false));
-		
-		//attachment
-		screen.assetRefs.add(assetRef);*/
 		attachAssetToScreen(screenMap, "GdxScreen", screenRef, assetRef);
 	}
 	
@@ -201,20 +158,6 @@ public class GdxGame extends Game{
 	 * @param assetRef The reference you created for the asset.
 	 */
 	public final void attachAssetToTransition(String transitionRef, String assetRef){
-		/*debug.assertNotNull("transition ref is not null", transitionRef);
-		debug.assertNotNull("asset ref is not null", assetRef);
-		debug.assertStringNotEmpty("transition ref is not empty", (transitionRef = transitionRef.trim()));
-		debug.assertStringNotEmpty("asset ref is not empty", (assetRef = assetRef.trim()));
-		debug.assertTrue("transition ref exists", transitionMap.containsKey(transitionRef));
-		debug.assertTrue("asset ref exists", transitionMap.containsKey(assetRef));
-		
-		//get objects
-		GdxTransition transition = transitionMap.get(transitionRef);
-		
-		debug.assertFalse("transition ref gets new asset ref", transition.assetRefs.contains(assetRef, false));
-		
-		//attachment
-		transition.assetRefs.add(assetRef);*/
 		attachAssetToScreen(transitionMap, "GdxTransition", transitionRef, assetRef);
 	}
 	
@@ -235,7 +178,6 @@ public class GdxGame extends Game{
 		screen.setGame(this); //This is a must.  Every screen must know their game.
 		
 		debug.assertNotNull(name + " is not null", screen);
-		//debug.assertTrue("screen class extends GdxScreen",screen instanceof T);
 		debug.assertFalse(name + " ref is unique", map.containsKey(ref)); //unique reference
 		debug.assertFalse(name + " object is unique", map.containsValue(screen, false)); //unique screen: see GdxScreen equals(ObjectS) method
 		

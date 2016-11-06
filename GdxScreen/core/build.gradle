@@ -9,3 +9,75 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 eclipse.project {
     name = appName + "-core"
 }
+
+//GdxScreen
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+group = "com.github.rickodesea.gdxscreen"
+archivesBaseName = "gdxscreen"
+version = "0.0.5-SNAPSHOT"
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'GdxScreen'
+        packaging 'jar'
+        // optionally artifactId can be defined here 
+        description 'A state machine - a library to handle all your gamescreens / gamestates'
+        url 'https://github.com/Rickodesea/GdxScreen'
+
+        scm {
+          connection 'scm:git:https://github.com/Rickodesea/GdxScreen.git'
+          developerConnection 'scm:git:https://github.com/Rickodesea/GdxScreen.git'
+          url 'https://github.com/Rickodesea/GdxScreen.git'
+        }
+
+        licenses {
+          license {
+            name 'The Apache License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0'
+          }
+        }
+
+        developers {
+          developer {
+            id 'Algodal'
+            name 'Alrick Grandison'
+            email 'alrickgrandison@gmail.com'
+          }
+        }
+      }
+    }
+  }
+}
