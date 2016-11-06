@@ -35,7 +35,7 @@ signing {
 
 group = "com.github.rickodesea.gdxscreen"
 archivesBaseName = "gdxscreen"
-version = "0.0.5-SNAPSHOT"
+version = "0.0.7"
 
 uploadArchives {
   repositories {

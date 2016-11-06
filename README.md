@@ -13,3 +13,8 @@ GdxScreen helps to keep your game code more organised by putting all your transi
 
 ##Demonstration
 A small demonstration is provided :https://github.com/Rickodesea/GdxScreen-Demo
+
+
+##v0.0.7
++Added clearColor variable in GdxGame to allow you to set the color to clear the screens with
++Added isGamePaused() in GdxScreen to allow the screen to know if the game is paused or not

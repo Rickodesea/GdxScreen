@@ -151,4 +151,13 @@ public class GdxScreen implements Screen{
 	final public GdxLibrary getGameLibrary(){
 		return game.library;
 	}
+	
+	/**
+	 * This method is only allowed to be called inside of render.
+	 * @return is the game paused or not
+	 */
+	final public boolean isGamePaused(){
+		getGame().debug.assertEqual("method called in rendering", getGame().currentState, GdxGame.State.Rendering);
+		return game.pauseStatus;
+	}
 }

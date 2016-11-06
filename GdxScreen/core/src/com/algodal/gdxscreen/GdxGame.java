@@ -23,6 +23,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
@@ -60,6 +61,16 @@ public class GdxGame extends Game{
 	 */
 	public final GdxLibrary library;
 	
+	/**
+	 * The color to clear the background of all your screens.
+	 */
+	public final Color clearColor;
+	
+	/**
+	 * Allows the screen to know wether or not the game has paused.
+	 */
+	boolean pauseStatus;
+	
 	public GdxGame(){
 		screenMap = new ArrayMap<>();
 		transitionMap = new ArrayMap<>();
@@ -76,6 +87,10 @@ public class GdxGame extends Game{
 		//comment to the debug code because the tag strings are descriptive.
 		
 		library = new GdxLibrary();
+		
+		clearColor = new Color(Color.RED);
+		
+		pauseStatus = false; //initially the game is not paused.
 	}
 	
 	/**
@@ -230,7 +245,7 @@ public class GdxGame extends Game{
 	 */
 	@Override
 	public void render() {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		float delta = Gdx.graphics.getDeltaTime();
 		screenListener.render(delta);
@@ -259,6 +274,7 @@ public class GdxGame extends Game{
 	@Override
 	public void pause() {
 		screenListener.pause();
+		pauseStatus = true; //tell all the screens: the is paused
 	}
 
 	/**
@@ -268,6 +284,7 @@ public class GdxGame extends Game{
 	@Override
 	public void resume() {
 		screenListener.resume();
+		pauseStatus = false; //tell all the screens: the game is not paused
 	}
 
 	/**
