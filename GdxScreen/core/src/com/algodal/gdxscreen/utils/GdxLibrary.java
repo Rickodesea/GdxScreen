@@ -184,4 +184,31 @@ public class GdxLibrary {
 		 */
 		abstract public void unload();
 	}
+	
+	public static abstract class ContentAdaptor<T> extends Content<T>{
+
+		@Override
+		public Content<T> initialize() {
+			onInitialize();
+			initialized = true;
+			return this;
+		}
+
+		@Override
+		public Content<T> load() {
+			onLoad();
+			loaded = true;
+			return this;
+		}
+
+		@Override
+		public void unload() {
+			onUnLoad();
+			loaded = false;
+		}
+		
+		public abstract void onInitialize();
+		public abstract void onLoad();
+		public abstract void onUnLoad();
+	}
 }

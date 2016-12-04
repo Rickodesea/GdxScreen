@@ -37,12 +37,13 @@ public class GdxTransition extends GdxScreen{
 	public final void removeOldScreen(){
 		getGame().debug.assertEqual("this method is called inside the render method", getGame().currentState, GdxGame.State.Rendering);
 		if(!transfered){
-			oldScreen.hide();
+			if(oldScreen.showed) oldScreen.hide();
 			oldScreen.showed = false;
-			unloadAssets(new GdxScreen[]{this, newScreen}, new GdxScreen[]{oldScreen});
+			if(oldScreen.loaded) unloadAssets(new GdxScreen[]{this, newScreen}, new GdxScreen[]{oldScreen});
 			oldScreen.loaded = false;
 			showing = newScreen;
 			transfered = true;
+			//getGame().debug.report("removeOldScreen", oldScreen.getClass().toString());
 		}
 	}
 	
@@ -53,12 +54,13 @@ public class GdxTransition extends GdxScreen{
 	public final void deliverNewScreen(){
 		getGame().debug.assertEqual("this method is called inside the render method", getGame().currentState, GdxGame.State.Rendering);
 		removeOldScreen();
-		hide();
+		if(showed) hide();
 		showed = false;
-		unloadAssets(new GdxScreen[]{newScreen}, new GdxScreen[]{this});
+		if(loaded) unloadAssets(new GdxScreen[]{newScreen}, new GdxScreen[]{this});
 		loaded = false;
 		getGame().setScreen(newScreen);
 		transfered = false; //reset transfered
+		//getGame().debug.report("deliverNewScreen", newScreen.getClass().toString());
 	}
 	
 	/**
@@ -70,6 +72,7 @@ public class GdxTransition extends GdxScreen{
 		getGame().debug.assertEqual("this method is called inside show method", getGame().currentState, GdxGame.State.Showing);
 		newScreen.loadAssets();
 		newScreen.loaded = true;
+		//getGame().debug.report("startAsynchronousLoadingOfNewScreenAssets", "assets of the new screen are set to load by transition");
 	}
 
 	/**
@@ -99,6 +102,8 @@ public class GdxTransition extends GdxScreen{
 		for(GdxScreen screen : hidden) hiddenAssets.addAll(screen.assetRefs);
 		
 		for(String assetRef : hiddenAssets)
-			if(!visibleAssets.contains(assetRef, false)) getGame().assetMap.get(assetRef).unload(); 
+			if(!visibleAssets.contains(assetRef, false)) 
+				if(getGame().assetMap.get(assetRef).isloaded())
+					getGame().assetMap.get(assetRef).unload(); 
 	}
 }

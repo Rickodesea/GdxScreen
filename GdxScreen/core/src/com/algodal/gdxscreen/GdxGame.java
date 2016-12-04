@@ -234,9 +234,31 @@ public class GdxGame extends Game{
 		GdxTransition transition = (GdxTransition)transitionMap.get(transitionRef);
 		GdxScreen screen = screenMap.get(screenRef);
 		transition.newScreen = screen;
-		transition.oldScreen = (GdxScreen)getScreen();
+		transition.oldScreen = getNonTransitionalScreen();
 		transition.showing = transition.oldScreen;
 		setScreen(transition);
+	}
+	
+	private final GdxScreen getNonTransitionalScreen(){
+		GdxScreen gdxScreen = (GdxScreen) getScreen();
+		//up to version 0.1.4 there is a bug:
+		//if the transition is set, the old screen hide method is not called
+		//to fix this we will have to check if the current screen is a transition
+		if(gdxScreen instanceof GdxTransition){
+			//if the current screen is a transition, get rid of it and its old screen
+			//and replace it with its new screen
+			GdxTransition transition = (GdxTransition)gdxScreen;
+			transition.hide();
+			transition.oldScreen.hide();
+			transition.showed = false;
+			transition.oldScreen.showed = false;
+			transition.unloadAssets(new GdxScreen[]{transition.newScreen}, new GdxScreen[]{transition, transition.oldScreen});
+			transition.loaded = false;
+			transition.oldScreen.loaded = false;
+			gdxScreen = transition.newScreen;
+			transition.transfered = false; //reset
+		}
+		return gdxScreen;
 	}
 
 	/**
